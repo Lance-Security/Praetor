@@ -1,2 +1,1 @@
-# Praetor
-State management &amp; fully automated notetaking for penetration testing engagements
+> This repository is not currently accepting contributors and is in a WIP state not ready for public viewing. Any use of this software in the current state is prohibited, and we are not responsible for any damages caused by the current version of the software.
