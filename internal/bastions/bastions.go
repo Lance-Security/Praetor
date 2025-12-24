@@ -94,5 +94,5 @@ func CheckAndInstallBubblewrap() error {
 		// bubblewrap is installed
 		return nil
 	}
-	return fmt.Errorf("Bubblewrap is not installed. Please install with `sudo apt install bubblewrap` or `sudo pacman -S bubblewrap` and try again.")
+	return fmt.Errorf("bubblewrap is not installed. please install with `sudo apt install bubblewrap` or `sudo pacman -S bubblewrap` and try again.")
 }
