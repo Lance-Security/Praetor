@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 Lachlan Harris
+Copyright © 2025 Lance Security <support@lancesecurity.org>
 */
 package cmd
 

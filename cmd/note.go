@@ -1,21 +1,53 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 Lance Security <support@lancesecurity.org>
 */
 package cmd
 
 import (
-	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
+
+	"github.com/lachlanharrisdev/praetor/internal/engagement"
+	"github.com/lachlanharrisdev/praetor/internal/events"
 )
 
 // noteCmd represents the note command
 var noteCmd = &cobra.Command{
 	Use:   "note <comment...>",
 	Short: "Add a note to the current engagement log",
-	Long:  "Adds a note entry to your engagement state (scaffolding; functionality not yet implemented).",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("note called")
+	Long: `Note adds a note entry to the current engagement's event log.
+	Everything after "note" is treated as the note content, including quotations.`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		engDir, err := engagement.FindEngagementDir(cwd)
+		if err != nil {
+			return err
+		}
+		m, err := engagement.ReadMetadata(engDir)
+		if err != nil {
+			return err
+		}
+		user := os.Getenv("USER")
+		if user == "" {
+			user = os.Getenv("LOGNAME")
+		}
+		content := strings.Join(args, " ")
+		n := events.NewNote(
+			content,
+			m.EngagementID,
+			filepath.Clean(cwd),
+			user,
+		)
+		if err := events.AppendEvent(engagement.EventsPath(engDir), n); err != nil {
+			return err
+		}
+		return engagement.TouchLastUsed(engDir)
 	},
 	Args: cobra.MinimumNArgs(1),
 }
