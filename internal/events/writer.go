@@ -52,7 +52,11 @@ func AppendEvent(path string, event *Event) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		if cerr := f.Close(); err == nil && cerr != nil {
+			err = cerr
+		}
+	}()
 	_, err = f.Write(b)
 	return err
 }
