@@ -39,6 +39,12 @@ func MarshalJSONL(event *Event) ([]byte, error) {
 	return buff.Bytes(), nil
 }
 
+// ! potential race condition between readin gprevious hash
+// ! and appending new event
+// could lock the event log to prevent this but for now
+// its out of scope and only occurs with multiple processes
+// running simultaneously (not supported)
+
 // AppendEvent appends the event to the given file path
 func AppendEvent(path string, event *Event) error {
 	if err := EnsureEventHash(path, event); err != nil {
