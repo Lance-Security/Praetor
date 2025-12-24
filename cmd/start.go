@@ -29,7 +29,9 @@ var startCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		_ = os.Chdir(engDir)
+		if err = os.Chdir(engDir); err != nil {
+			return fmt.Errorf("Failed to change directory to %s: %w", engDir, err)
+		}
 		fmt.Println(engDir)
 		return nil
 	},
