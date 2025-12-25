@@ -13,6 +13,8 @@ import (
 type Config struct {
 	EngagementRoot string `json:"engagement_root"`
 	TemplateDir    string `json:"template_dir"`
+	UseColour      bool   `json:"useColour"`
+	UseBold        bool   `json:"useBold"`
 }
 
 // Default returns the configuration values
@@ -28,6 +30,8 @@ func Default() (Config, error) {
 	return Config{
 		EngagementRoot: filepath.Join(home, "engagements"),
 		TemplateDir:    filepath.Join(cfgDir, "template"),
+		UseColour:      true,
+		UseBold:        true,
 	}, nil
 }
 

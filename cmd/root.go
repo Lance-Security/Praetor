@@ -6,6 +6,8 @@ package cmd
 import (
 	"os"
 
+	"github.com/lachlanharrisdev/praetor/internal/config"
+	"github.com/lachlanharrisdev/praetor/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +18,14 @@ var rootCmd = &cobra.Command{
 	Long: `Praetor is a powerful tool designed to automatically log and organise note-taking
 in penetration testing engagements, as well as offering a minimal suite of tools
 to isolate, secure and manage the engagement environment.`,
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		cfg, err := config.Load()
+		if err != nil {
+			return err
+		}
+		utils.ConfigureTerminal(cfg.UseColour, cfg.UseBold)
+		return nil
+	},
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
