@@ -40,16 +40,15 @@ var statusCmd = &cobra.Command{
 			started = ts.Local().Format("2006-01-02 15:04")
 		}
 		output.Indent()
+		defer output.Dedent()
 		output.Println(utils.Muted("Started:"), utils.Default(started))
 		output.Println(utils.Muted("Notes:"), utils.Primary(s.NoteCount))
 
 		if s.LastEvent == nil {
 			output.Println(utils.Muted("Latest:"), utils.Muted("(none)"))
-			output.Dedent()
 			return nil
 		}
 		output.Println(utils.Muted("Latest:"), events.ShowEventTerminal(*s.LastEvent))
-		output.Dedent()
 		return nil
 	},
 }
