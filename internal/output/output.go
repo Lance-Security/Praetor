@@ -56,19 +56,19 @@ var iconMap = map[IconType]string{
 type loaderState struct {
 	frameIndex int
 	stopChan   chan struct{}
+	stopped    bool
 }
 
 // OutputFormatter manages standardized console output with Docker-like formatting
 type OutputFormatter struct {
-	mu              sync.RWMutex
-	writer          io.Writer
-	indentLevel     int
-	activeLoaders   map[string]*loaderState
-	loaderTicker    *time.Ticker
-	loaderStopChan  chan struct{}
-	loaderWg        sync.WaitGroup
-	initOnce        sync.Once
-	cursorAtLineEnd bool
+	mu             sync.RWMutex
+	writer         io.Writer
+	indentLevel    int
+	activeLoaders  map[string]*loaderState
+	loaderTicker   *time.Ticker
+	loaderStopChan chan struct{}
+	loaderWg       sync.WaitGroup
+	initOnce       sync.Once
 }
 
 // NewOutputFormatter creates a new OutputFormatter instance
@@ -77,10 +77,9 @@ func NewOutputFormatter(writer io.Writer) *OutputFormatter {
 		writer = os.Stdout
 	}
 	return &OutputFormatter{
-		writer:          writer,
-		indentLevel:     0,
-		activeLoaders:   make(map[string]*loaderState),
-		cursorAtLineEnd: true,
+		writer:        writer,
+		indentLevel:   0,
+		activeLoaders: make(map[string]*loaderState),
 	}
 }
 
@@ -244,7 +243,8 @@ func (of *OutputFormatter) StartLoader(id string, message string) func(OutputLev
 	return func(finalLevel OutputLevel, finalIcon IconType, finalMessage string) {
 		of.mu.Lock()
 		loaderState, exists := of.activeLoaders[id]
-		if exists {
+		if exists && !loaderState.stopped {
+			loaderState.stopped = true
 			close(loaderState.stopChan)
 			delete(of.activeLoaders, id)
 		}
