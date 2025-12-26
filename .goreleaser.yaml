@@ -29,7 +29,7 @@ builds:
       - -X github.com/lance-security/praetor/internal/version.Date={{ .Date }}
 
 gomod:
-  proxy: false
+  proxy: true
   env:
     - GOPROXY=direct
     - GOSUMDB=off
@@ -109,21 +109,22 @@ release:
 
   name_template: "{{ .Tag }}"
   header: |
-    ## Praetor {{ .Version }}
+    # Praetor {{ .Version }}
 
     **Release Date:** {{ .Date }}
-    **Commit:** {{ .ShortCommit }}
+    **Latest Included Commit:** {{ .ShortCommit }}
+    **Prerelease:** {{ .Prerelease }}
+    **Download URL:** {{ .ReleaseURL }}
 
+    ---
   footer: |
     ---
 
-    ### Installation
+    ## Installation
 
-    Download the binary for your platform from the assets below, optionally verify the checksum, and place it in your `$PATH`.
+    Download the binary for your platform from the assets below, optionally verify the checksum, and place the binary in your `$PATH`.
 
-    **Linux:**
     ```bash
-    # Extract and install
     tar xzf praetor_{{ .Version }}_<os>_<arch>.tar.gz
     sudo mv pt /usr/local/bin/
     ```
@@ -133,9 +134,10 @@ release:
     sha256sum -c checksums.txt
     ```
 
+    > We currently only support Linux. If you'd like to add support for another OS, or you just want to help out, we'd be absolutely happy for you contribute in any way!
+
     ### Resources
 
     - [Documentation](https://github.com/{{ .Env.GITHUB_REPOSITORY }})
     - [Report Issues](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/issues)
     - [Discussions](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/discussions)
-    - [Lance Security](https://www.lancesecurity.org)
