@@ -121,18 +121,12 @@ release:
 
     Download the binary for your platform from the assets below, optionally verify the checksum, and place it in your `$PATH`.
 
-    **macOS/Linux:**
+    **Linux:**
     ```bash
     # Extract and install
     tar xzf praetor_{{ .Version }}_<os>_<arch>.tar.gz
     sudo mv pt /usr/local/bin/
     ```
-
-    **Windows:**
-
-    *NOTICE: Windows is not officially supported, we generate binaries and ensure they compile to windows targets, but there is no testing done on Windows systems.*
-
-    Extract the zip folder in explorer and move `pt.exe` to a directory in your `PATH`.
 
     **Verify Checksum:**
     ```bash
@@ -145,7 +139,3 @@ release:
     - [Report Issues](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/issues)
     - [Discussions](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/discussions)
     - [Lance Security](https://www.lancesecurity.org)
-
-    ---
-
-    **Built with Go {{ .Env.GO_VERSION }}** | **Git State:** {{ .GitTreeState }}
