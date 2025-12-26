@@ -14,7 +14,7 @@ import (
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Shows current version info",
-	Long:  `Versions shows the current version information of the application.`,
+	Long:  `Version shows the current version information of the application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		output.LogSuccessf("Praetor `pt` version %s (commit: %s, date: %s)", version.Version, version.Commit, version.Date)
 	},
