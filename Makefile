@@ -1,10 +1,10 @@
 GO      ?= go
 BINARY  ?= pt
 PKG     := ./...
-MAIN    := ./main.go
+MAIN    := ./cmd/praetor
 OUTDIR  := bin
 
-.PHONY: all build run test tidy clean
+.PHONY: all build run test tidy clean install
 
 all: build
 
@@ -13,7 +13,7 @@ build:
 	$(GO) build -o $(OUTDIR)/$(BINARY) $(MAIN)
 
 run:
-	$(GO) run $(MAIN)
+	$(GO) run ./cmd/praetor
 
 test:
 	$(GO) test $(PKG)
@@ -23,3 +23,6 @@ tidy:
 
 clean:
 	@rm -rf $(OUTDIR)
+
+install:
+	$(GO) install $(MAIN)

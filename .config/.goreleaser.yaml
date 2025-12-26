@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+project_name: praetor
+version: 2
+
+metadata:
+  # Set the modified timestamp on the metadata files.
+  mod_timestamp: "{{ .CommitTimestamp }}"
+
+  # The maintainers of this software.
+  # Most features will only use the first maintainer defined here.
+  maintainers:
+    - "Lachlan Harris <lachlan.harris@lancesecurity.org>"
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: praetor
+    main: ./cmd/praetor
+    binary: pt
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X github.com/lance-security/praetor/internal/version.Version={{ .Version }}
+      - -X github.com/lance-security/praetor/internal/version.Commit={{ .Commit }}
+      - -X github.com/lance-security/praetor/internal/version.Date={{ .Date }}
+
+# verifiable builds
+gomod:
+  # Proxy a module from proxy.golang.org, making the builds verifiable.
+  # This will only be effective if running against a tag. Snapshots will ignore
+  # this setting.
+  proxy: true
+
+  # If proxy is true, use these environment variables when running `go mod`
+  # commands (namely, `go mod tidy`).
+  env:
+    - GOPROXY=https://proxy.golang.org,direct
+    - GOSUMDB=sum.golang.org
+
+  # Sets the `-mod` flag value.
+  mod: mod
+
+# UPX compression
+upx:
+  - # Whether to enable it or not.
+    enabled: true
+
+    # Filter by build ID.
+    ids: [praetor]
+
+    # Filter by GOOS.
+    goos: [linux]
+
+    # Filter by GOARCH.
+    goarch: [amd64, arm64]
+
+    # Compress argument.
+    # Valid options are from '1' (faster) to '9' (better), and 'best'.
+    compress: best
+
+    # Whether to try LZMA (slower).
+    lzma: true
+
+    # Whether to try all methods and filters (slow).
+    brute: true
+
+archives:
+  - id: linux-darwin
+    format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    goos: [linux, darwin]
+  - id: windows
+    format: zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    goos: [windows]
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  github:
+    owner: lance-security
+    name: praetor
+  name_template: "{{ .Tag }}"
+  footer: |
+    Thanks for using Praetor! Report issues at https://github.com/lance-security/praetor/issues

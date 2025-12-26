@@ -33,3 +33,6 @@ go.work.sum
 
 # Build directories
 bin/
+
+# Goreleaser
+dist/

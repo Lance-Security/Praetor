@@ -14,10 +14,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lance-security/praetor/internal/version"
 )
-
-// TODO: proper versioning system
-const ToolVersion = "dev"
 
 type Metadata struct {
 	EngagementID string `json:"engagement_id"`
@@ -104,7 +102,7 @@ func EnsurePraetorFiles(engagementDir, name string) error {
 			EngagementID: uuid.NewString(),
 			Name:         name,
 			CreatedAt:    now,
-			ToolVersion:  ToolVersion,
+			ToolVersion:  version.Version,
 			LastUsed:     now,
 		}
 		if err := writeJSONFile(metaPath, &m, 0o600); err != nil {
@@ -146,7 +144,7 @@ func TouchLastUsed(engagementDir string) error {
 	}
 	m.LastUsed = time.Now().UTC().Format(time.RFC3339Nano)
 	if m.ToolVersion == "" {
-		m.ToolVersion = ToolVersion
+		m.ToolVersion = version.Version
 	}
 	return writeJSONFile(MetadataPath(engagementDir), &m, 0o600)
 }
