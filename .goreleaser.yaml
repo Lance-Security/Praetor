@@ -7,11 +7,6 @@ metadata:
   # Set the modified timestamp on the metadata files.
   mod_timestamp: "{{ .CommitTimestamp }}"
 
-  # The maintainers of this software.
-  # Most features will only use the first maintainer defined here.
-  maintainers:
-    - "Lachlan Harris <lachlan.harris@lancesecurity.org>"
-
 before:
   hooks:
     - go mod tidy
@@ -76,14 +71,13 @@ upx:
     brute: true
 
 archives:
-  - id: linux-darwin
+  - id: default
     format: tar.gz
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    goos: [linux, darwin]
-  - id: windows
-    format: zip
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    goos: [windows]
+    # Set per-OS format overrides
+    format_overrides:
+      - goos: windows
+        format: zip
 
 checksum:
   name_template: "checksums.txt"
