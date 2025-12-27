@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/lance-security/praetor/internal/config"
+	"github.com/lance-security/praetor/internal/output"
 	"github.com/lance-security/praetor/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -21,6 +22,7 @@ to isolate, secure and manage the engagement environment.`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := config.Load()
 		if err != nil {
+			output.LogErrorf("Failed to load configuration: %v", err)
 			return err
 		}
 		utils.ConfigureTerminal(cfg.UseColour, cfg.UseBold)

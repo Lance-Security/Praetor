@@ -6,21 +6,39 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/lance-security/praetor/internal/bastions"
+	"github.com/lance-security/praetor/internal/run"
 )
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
-	Use:   "run",
-	Short: "Runs any CLI command in an isolated Bastion",
-	Long: `Run allows you to run any CLI command within an isolated "Bastion", offering
-	a container-like, isolated environment for executing commands securely during
-	penetration testing engagements.`,
-	DisableFlagParsing: true,
+	Use:   "run [--sandbox -s] <command> [args...]",
+	Short: "Runs any CLI command, optionally in an isolated Bastion",
+	Long: `Run allows you to run any CLI command, optionally in an isolated "Bastion".
+	Bastions offer a container-like, isolated environment for executing commands
+	securely during penetration testing engagements.`,
 	Args:               cobra.MinimumNArgs(1),
 	SilenceUsage:       true,
+	DisableFlagParsing: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return bastions.RunInBastion(args)
+		// Manually parse sandbox flag from args (slightly messy but it'll do)
+		sandbox := false
+		var toolArgs []string
+		if len(args) > 0 && (args[0] == "-s" || args[0] == "--sandbox") {
+			sandbox = true
+			toolArgs = args[1:]
+		} else {
+			toolArgs = args
+		}
+
+		if len(toolArgs) == 0 {
+			cmd.Help()
+			return nil
+		}
+
+		if sandbox {
+			return run.RunInBastion(toolArgs)
+		}
+		return run.RunCmd(toolArgs)
 	},
 }
 
@@ -36,4 +54,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	runCmd.Flags().BoolP("sandbox", "s", false, "Run the command in an isolated Bastion") // non-functional but should add to help message
+
 }
