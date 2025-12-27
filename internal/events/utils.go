@@ -67,3 +67,27 @@ func GetLastEventId(path string) (int, error) {
 	}
 	return lastEvent.Id, nil
 }
+
+// GetEventById retrieves an event by its ID from the events log file
+func GetEventById(path string, id int) (*Event, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	decoder := json.NewDecoder(f)
+	for {
+		var event Event
+		if err := decoder.Decode(&event); err != nil {
+			if err.Error() == "EOF" {
+				break
+			}
+			return nil, err
+		}
+		if event.Id == id {
+			return &event, nil
+		}
+	}
+	return nil, nil
+}

@@ -25,6 +25,7 @@ type hashMaterial struct {
 	Raw       string   `json:"raw"`
 	Tags      []string `json:"tags"`
 	PrevHash  string   `json:"prev_hash"`
+	RefId     int      `json:"ref_id"`
 }
 
 // GetPreviousHash returns the last event's stored hash (if present).
@@ -95,6 +96,7 @@ func ComputeEventHash(event *Event) (string, error) {
 		Raw:       event.Raw,
 		Tags:      tags,
 		PrevHash:  event.PrevHash,
+		RefId:     event.RefId,
 	}
 	b, err := json.Marshal(&m)
 	if err != nil {
