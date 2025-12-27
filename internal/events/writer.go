@@ -13,6 +13,7 @@ import (
 
 // Event represents a single event in the engagement log
 type Event struct {
+	Id        int      `json:"id"`             // auto-incrementing ID
 	Type      string   `json:"type"`           // "note" | "command" | "result"
 	Timestamp string   `json:"timestamp"`      // RFC3339Nano format
 	SessionID string   `json:"session_id"`     // Engagement session ID
@@ -47,6 +48,18 @@ func MarshalJSONL(event *Event) ([]byte, error) {
 
 // AppendEvent appends the event to the given file path
 func AppendEvent(path string, event *Event) error {
+	f, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o600) // lock file early so other functions are deterministic
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	event.Id, err = GetLastEventId(path)
+	if err != nil {
+		return err
+	}
+	event.Id++
+
 	if err := EnsureEventHash(path, event); err != nil {
 		return err
 	}
@@ -54,15 +67,6 @@ func AppendEvent(path string, event *Event) error {
 	if err != nil {
 		return err
 	}
-	f, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o600)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		if cerr := f.Close(); err == nil && cerr != nil {
-			err = cerr
-		}
-	}()
 	_, err = f.Write(b)
 	return err
 }
@@ -70,6 +74,7 @@ func AppendEvent(path string, event *Event) error {
 // NewEvent creates a new event
 func NewEvent(eventType, content, timestamp, sessionID, cwd, user string, raw string, tags []string) *Event {
 	return &Event{
+		Id:        0, // to be set when appending to log
 		Type:      eventType,
 		Timestamp: timestamp,
 		SessionID: sessionID,
