@@ -12,7 +12,7 @@ import (
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run [--sandbox -s] <command> [args...]",
-	Short: "Runs any CLI command in an isolated Bastion",
+	Short: "Runs any CLI command, optionally in an isolated Bastion",
 	Long: `Run allows you to run any CLI command within an isolated "Bastion", offering
 	a container-like, isolated environment for executing commands securely during
 	penetration testing engagements.`,
