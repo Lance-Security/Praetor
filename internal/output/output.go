@@ -29,14 +29,15 @@ const (
 type OutputLevel int
 
 const (
-	// standard output with default colour
+	// standard output with default colour (white)
 	LevelDefault OutputLevel = iota
-	// primary/top-level output in primary colour
+	// primary/top-level output in primary colour (blue)
 	LevelPrimary
-	// sub-level output in muted / dim colour
+	// sub-level output in muted / dim colour (gray)
 	LevelMuted
-	LevelSuccess
+	// warning output in warning colour (yellow)
 	LevelWarning
+	// error output in error colour (red)
 	LevelError
 )
 
@@ -146,13 +147,7 @@ func (of *OutputFormatter) formatOutput(level OutputLevel, iconType IconType, me
 	var colorFunc func(...any) string
 	switch level {
 	case LevelPrimary:
-		if indentLevel == 0 {
-			colorFunc = utils.Primary
-		} else {
-			colorFunc = utils.Muted
-		}
-	case LevelSuccess:
-		colorFunc = utils.Accept
+		colorFunc = utils.Primary
 	case LevelWarning:
 		colorFunc = utils.Warning
 	case LevelError:
@@ -228,7 +223,7 @@ func (of *OutputFormatter) StartLoader(id string, message string) func(OutputLev
 				of.mu.Unlock()
 
 				clearLine()
-				output := of.formatOutput(LevelPrimary, IconLoader, message, frameIndex, indentLevel)
+				output := of.formatOutput(LevelDefault, IconLoader, message, frameIndex, indentLevel)
 				fmt.Fprint(of.writer, "\r"+output)
 
 			case <-state.stopChan:

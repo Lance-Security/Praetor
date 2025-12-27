@@ -25,10 +25,10 @@ func (of *OutputFormatter) LogPrimaryf(format string, args ...any) {
 	of.Logf(LevelPrimary, IconNone, format, args...)
 }
 func (of *OutputFormatter) LogSuccess(message string) {
-	of.Log(LevelSuccess, IconAccept, message)
+	of.Log(LevelPrimary, IconAccept, message)
 }
 func (of *OutputFormatter) LogSuccessf(format string, args ...any) {
-	of.Logf(LevelSuccess, IconAccept, format, args...)
+	of.Logf(LevelPrimary, IconAccept, format, args...)
 }
 func (of *OutputFormatter) LogWarning(message string) {
 	of.Log(LevelWarning, IconWarning, message)
