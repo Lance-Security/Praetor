@@ -51,3 +51,19 @@ func GetUser() string {
 	}
 	return user
 }
+
+// GetLastEventId returns the ID from the last event in the events log file
+// If there are no events or no valid ID, it returns 0
+func GetLastEventId(path string) (int, error) {
+	lastEvent, err := GetLastEvent(path)
+	if err != nil {
+		return 0, err
+	}
+	if lastEvent == nil {
+		return 0, nil
+	}
+	if lastEvent.Id < 0 {
+		return 0, nil
+	}
+	return lastEvent.Id, nil
+}

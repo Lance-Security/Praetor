@@ -52,21 +52,13 @@ func AppendEvent(path string, event *Event) error {
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if cerr := f.Close(); err == nil && cerr != nil {
-			err = cerr
-		}
-	}()
+	defer f.Close()
 
-	lastEvent, err := GetLastEvent(path)
+	event.Id, err = GetLastEventId(path)
 	if err != nil {
 		return err
 	}
-	if lastEvent == nil || lastEvent.Id < 0 {
-		event.Id = 1
-	} else {
-		event.Id = lastEvent.Id + 1
-	}
+	event.Id++
 
 	if err := EnsureEventHash(path, event); err != nil {
 		return err
