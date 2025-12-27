@@ -15,6 +15,7 @@ import (
 )
 
 type hashMaterial struct {
+	Id        int      `json:"id"`
 	Type      string   `json:"type"`
 	Timestamp string   `json:"timestamp"`
 	SessionID string   `json:"session_id"`
@@ -84,6 +85,7 @@ func ComputeEventHash(event *Event) (string, error) {
 	}
 
 	m := hashMaterial{
+		Id:        event.Id,
 		Type:      event.Type,
 		Timestamp: event.Timestamp,
 		SessionID: event.SessionID,
