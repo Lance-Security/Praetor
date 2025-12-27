@@ -14,18 +14,21 @@ import (
 // Event represents a single event in the engagement log
 type Event struct {
 	Id        int      `json:"id"`             // auto-incrementing ID
-	Type      string   `json:"type"`           // "note" | "command" | "result"
+	Type      string   `json:"type"`           // "note" | "command" | "result" | "modify" | "delete"
 	Timestamp string   `json:"timestamp"`      // RFC3339Nano format
 	SessionID string   `json:"session_id"`     // Engagement session ID
 	Cwd       string   `json:"cwd"`            // Current working directory
-	User      string   `json:"user"`           // User who performed the action
+	User      string   `json:"user"`           // user who performed the action
 	Content   string   `json:"content"`        // Main content of the event
-	Raw       string   `json:"raw,omitempty"`  // Optional raw data (e.g., command output)
-	Tags      []string `json:"tags,omitempty"` // Optional tags associated with the event
+	Raw       string   `json:"raw,omitempty"`  // Optional raw data (e.g command output)
+	Tags      []string `json:"tags,omitempty"` // optional tags associated with the event (not implemented)
 
 	// tamper protection
 	Hash     string `json:"hash,omitempty"`      // Optional hash for tamper protection
 	PrevHash string `json:"prev_hash,omitempty"` // Optional previous hash for tamper protection
+
+	// modification / deletion
+	RefId int `json:"ref_id,omitempty"` // Optional reference to another event ID
 }
 
 // utility function

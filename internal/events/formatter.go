@@ -50,8 +50,8 @@ func ShowEventTerminal(e Event) string {
 	b.WriteString(utils.Mutedf("by "))
 	b.WriteString(fmt.Sprintf("%s ", e.User))
 	b.WriteString(utils.Mutedf("in "))
-	b.WriteString(fmt.Sprintf("%s ", e.Cwd))
-	b.WriteString(utils.Mutedf("| "))
+	b.WriteString(fmt.Sprintf("%s ", ShortenCwd(e.Cwd, 30)))
+	b.WriteString(utils.Mutedf("id %v | ", e.Id))
 	b.WriteString(e.Content) // normal content
 	return b.String()
 }
@@ -64,4 +64,31 @@ func ShowEventsTerminal(events []Event) string {
 		b.WriteString("\n")
 	}
 	return b.String()
+}
+
+// ShortenCwd shortens a directory path to fit within maxLength
+func ShortenCwd(cwd string, maxLength int) string {
+	if len(cwd) <= maxLength {
+		// /root/middle/final-path
+		return cwd
+	}
+	parts := strings.Split(cwd, "/")
+	if len(parts) < 3 {
+		// /root/final-path
+		return cwd
+	}
+	start := parts[0]
+	if start == "" && len(parts) > 1 {
+		start = "/" + parts[1]
+		parts = parts[1:]
+	}
+	end := parts[len(parts)-1]
+	// /root/.../final-path
+	shortened := start + "/.../" + end
+
+	if len(shortened) > maxLength {
+		// .../final-path
+		return "..." + end
+	}
+	return shortened
 }

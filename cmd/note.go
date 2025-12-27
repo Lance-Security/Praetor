@@ -34,11 +34,9 @@ var noteCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		user := os.Getenv("USER")
-		if user == "" {
-			user = os.Getenv("LOGNAME")
-		}
+		user := events.GetUser()
 		content := strings.Join(args, " ")
+
 		n := events.NewNote(
 			content,
 			m.EngagementID,
