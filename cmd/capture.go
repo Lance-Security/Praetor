@@ -50,37 +50,21 @@ func capture(args []string) error {
 		return fmt.Errorf("failed to read metadata: %w", err)
 	}
 
-	user := os.Getenv("USER")
-	if user == "" {
-		user = os.Getenv("LOGNAME")
-	}
-	if user == "" {
-		user = "unknown"
-	}
+	user := events.GetUser()
 
 	var rawData string
 	var sourceLabel string
 
 	if len(args) > 0 {
-		filename := args[0]
-		data, err := readFromFile(filename)
+		rawData, sourceLabel, err = captureFromFile(args)
 		if err != nil {
-			return fmt.Errorf("failed to read file: %w", err)
+			return err
 		}
-		rawData = data
-		sourceLabel = filepath.Base(filename)
 	} else {
-		output.LogTask("Reading data from stdin")
-		stopLoader := output.StartLoader("stdin-read", "Waiting for data...")
-
-		data, err := readFromStdin()
+		rawData, sourceLabel, err = captureFromStdin()
 		if err != nil {
-			stopLoader(output.LevelError, output.IconReject, fmt.Sprintf("Failed to read from stdin: %v", err))
-			return fmt.Errorf("failed to read from stdin: %w", err)
+			return err
 		}
-		rawData = data
-		sourceLabel = "stdin"
-		stopLoader(output.LevelPrimary, output.IconAccept, "Read data from stdin")
 	}
 
 	if rawData == "" {
@@ -105,6 +89,31 @@ func capture(args []string) error {
 
 	output.LogSuccess("Successfully captured and logged result")
 	return engagement.TouchLastUsed(engDir)
+}
+
+// captureFromFile
+func captureFromFile(args []string) (rawData string, sourceLabel string, err error) {
+	filename := args[0]
+	data, err := readFromFile(filename)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to read file: %w", err)
+	}
+	return data, filepath.Base(filename), nil
+}
+
+// captureFromStdin
+func captureFromStdin() (rawData string, sourceLabel string, err error) {
+	output.LogTask("Reading data from stdin")
+	stopLoader := output.StartLoader("stdin-read", "Waiting for data...")
+
+	data, err := readFromStdin()
+	if err != nil {
+		stopLoader(output.LevelError, output.IconReject, fmt.Sprintf("Failed to read from stdin: %v", err))
+		return "", "", fmt.Errorf("failed to read from stdin: %w", err)
+	}
+
+	defer stopLoader(output.LevelPrimary, output.IconAccept, "Read data from stdin")
+	return data, "stdin", nil
 }
 
 // readFromFile reads the content of a file with security limits and validation

@@ -39,3 +39,15 @@ func GetLastEvent(path string) (*Event, error) {
 	}
 	return &lastEvent, nil
 }
+
+// GetUser attempts to get the current terminal user
+func GetUser() string {
+	user := os.Getenv("USER")
+	if user == "" {
+		user = os.Getenv("USERNAME")
+	}
+	if user == "" {
+		user = os.Getenv("LOGNAME")
+	}
+	return user
+}
