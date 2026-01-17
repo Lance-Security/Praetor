@@ -26,7 +26,10 @@ func TestEnsureEngagement(t *testing.T) {
 
 func TestReadMetadata(t *testing.T) {
 	tmpDir := t.TempDir()
-	engDir, _ := EnsureEngagement(tmpDir, "test", "")
+	engDir, err := EnsureEngagement(tmpDir, "test", "")
+	if err != nil {
+		t.Fatalf("EnsureEngagement failed: %v", err)
+	}
 
 	m, err := ReadMetadata(engDir)
 	if err != nil {
@@ -43,14 +46,20 @@ func TestReadMetadata(t *testing.T) {
 
 func TestTouchLastUsed(t *testing.T) {
 	tmpDir := t.TempDir()
-	engDir, _ := EnsureEngagement(tmpDir, "test", "")
+	engDir, err := EnsureEngagement(tmpDir, "test", "")
+	if err != nil {
+		t.Fatalf("EnsureEngagement failed: %v", err)
+	}
 
-	err := TouchLastUsed(engDir)
+	err = TouchLastUsed(engDir)
 	if err != nil {
 		t.Fatalf("TouchLastUsed failed: %v", err)
 	}
 
-	m, _ := ReadMetadata(engDir)
+	m, err := ReadMetadata(engDir)
+	if err != nil {
+		t.Fatalf("ReadMetadata failed: %v", err)
+	}
 	if m.LastUsed == "" {
 		t.Error("LastUsed should be updated")
 	}
