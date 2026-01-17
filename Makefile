@@ -4,7 +4,7 @@ PKG     := ./...
 MAIN    := ./cmd/praetor
 OUTDIR  := bin
 
-.PHONY: all build run test tidy clean install
+.PHONY: all build run test tidy clean install lint
 
 all: build
 
@@ -26,3 +26,7 @@ clean:
 
 install:
 	$(GO) install $(MAIN)
+
+lint:
+	$(GO) vet $(PKG)
+	golangci-lint run

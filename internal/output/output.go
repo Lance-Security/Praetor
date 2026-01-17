@@ -111,6 +111,7 @@ func (of *OutputFormatter) startLoaderTicker() {
 }
 
 // getIndentation returns the indentation string based on the current level
+/*
 func (of *OutputFormatter) getIndentation() string {
 	const indentSpace = "  " // 2 spaces per level
 	result := ""
@@ -118,7 +119,7 @@ func (of *OutputFormatter) getIndentation() string {
 		result += indentSpace
 	}
 	return result
-}
+}*/
 
 // getIcon returns the icon string for the given type
 func (of *OutputFormatter) getIcon(iconType IconType, frameIndex int) string {

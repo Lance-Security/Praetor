@@ -4,7 +4,7 @@ Praetor, or  `pt`, is a command-line interface for managing penetration testing 
 
 ## Installation
 
-You can find installation instructions on the [README](https://github.com/lachlanharrisdev/praetor)
+You can find installation instructions on the [README](https://github.com/lachlanharrisdev/praetor) or for the corresponding release on the repo [releases page](https://github.com/lachlanharrisdev/praetor/releases).
 
 ## Configuration
 
@@ -17,3 +17,4 @@ Global configuration files are located in the user's home directory under `~/.co
 * Ask for support in [discussions](https://github.com/lachlanharrisdev/praetor/discussions)
 * Report a bug [here](https://github.com/lachlanharrisdev/praetor/issues/new?template=bug_report.md)
 * Request a feature [here](https://github.com/lachlanharrisdev/praetor/issues/new?template=feature_request.md)
+* Report a security vulnerability [here](https://github.com/lachlanharrisdev/praetor/security/advisories)

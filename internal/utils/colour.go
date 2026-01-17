@@ -61,18 +61,26 @@ func primaryAttrs() []color.Attribute {
 	if useBold {
 		attrs = append(attrs, color.Bold)
 	}
+	if !useColour {
+		attrs = nil
+	}
 	return attrs
 }
 
 func mutedAttrs() []color.Attribute {
-	// Intentionally not bold.
-	return []color.Attribute{color.FgHiBlack}
+	if useColour {
+		return []color.Attribute{color.FgHiBlack}
+	}
+	return nil
 }
 
 func acceptAttrs() []color.Attribute {
 	attrs := []color.Attribute{color.FgGreen}
 	if useBold {
 		attrs = append(attrs, color.Bold)
+	}
+	if !useColour {
+		attrs = nil
 	}
 	return attrs
 }
@@ -82,6 +90,9 @@ func warningAttrs() []color.Attribute {
 	if useBold {
 		attrs = append(attrs, color.Bold)
 	}
+	if !useColour {
+		attrs = nil
+	}
 	return attrs
 }
 
@@ -90,6 +101,9 @@ func errorAttrs() []color.Attribute {
 	if useBold {
 		attrs = append(attrs, color.Bold)
 	}
+	if !useColour {
+		attrs = nil
+	}
 	return attrs
 }
 
@@ -97,12 +111,18 @@ func sprintStyled(attrs []color.Attribute, a ...any) string {
 	if len(attrs) == 0 {
 		return fmt.Sprint(a...)
 	}
-	return color.New(attrs...).Sprint(a...)
+	if useColour {
+		return color.New(attrs...).Sprint(a...)
+	}
+	return fmt.Sprint(a...)
 }
 
 func sprintStyledf(attrs []color.Attribute, format string, a ...any) string {
 	if len(attrs) == 0 {
 		return fmt.Sprintf(format, a...)
 	}
-	return color.New(attrs...).Sprintf(format, a...)
+	if useColour {
+		return color.New(attrs...).Sprintf(format, a...)
+	}
+	return fmt.Sprintf(format, a...)
 }

@@ -185,18 +185,27 @@ func writeJSONFile(path string, v any, perm fs.FileMode) error {
 	return nil
 }
 
+// shouldSkipPath returns true if the relative path should be skipped
+// during directory copy
+func shouldSkipPath(relPath string) bool {
+	if relPath == "." || relPath == ".praetor" {
+		return true
+	}
+	return strings.HasPrefix(relPath, ".praetor"+string(filepath.Separator))
+}
+
 // copyDir copies the contents of the src directory
 // to the dst directory, excluding any .praetor directories
 func copyDir(src, dst string) error {
 	return filepath.WalkDir(src, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
 		rel, err := filepath.Rel(src, path)
 		if err != nil {
 			return err
 		}
-		if rel == "." || rel == ".praeator" {
-			return nil
-		}
-		if strings.HasPrefix(rel, ".praetor"+string(filepath.Separator)) {
+		if shouldSkipPath(rel) {
 			return nil
 		}
 

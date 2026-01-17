@@ -31,8 +31,7 @@ var runCmd = &cobra.Command{
 		}
 
 		if len(toolArgs) == 0 {
-			cmd.Help()
-			return nil
+			return cmd.Help()
 		}
 
 		if sandbox {
