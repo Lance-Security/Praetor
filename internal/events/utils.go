@@ -121,3 +121,30 @@ func GetLastNEvents(path string, n int) ([]*Event, error) {
 	}
 	return events[len(events)-n:], nil
 }
+
+// GetAllEvents retrieves all events as an array from the event log file
+func GetAllEvents(path string) ([]*Event, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	decoder := json.NewDecoder(f)
+	var events []*Event
+
+	for {
+		var event Event
+		if err := decoder.Decode(&event); err != nil {
+			if err.Error() == "EOF" {
+				break
+			}
+			return nil, err
+		}
+		eventCopy := new(Event)
+		*eventCopy = event
+		events = append(events, eventCopy)
+	}
+
+	return events, nil
+}

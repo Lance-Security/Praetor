@@ -1,0 +1,15 @@
+# lachlanharrisdev is the owner of the repo and should be an owner of everything
+* @lachlanharrisdev
+
+# key contributors to documentation may be added here
+/docs/ @lachlanharrisdev
+
+# key contributors to primary source code may be added here
+/cmd/ @lachlanharrisdev
+
+/internal/ @lachlanharrisdev
+
+
+# ---
+# owner of the codeowners file itself, this line is not to be modified
+/.github/CODEOWNERS @lachlanharrisdev
