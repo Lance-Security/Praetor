@@ -14,7 +14,28 @@ func TestPrepareEvents(t *testing.T) {
 	defer os.Remove(tmpfile.Name())
 	tmpfile.Close()
 
-	err = AppendEvent(tmpfile.Name(), NewNote("Original", "session", "/home", "user"))
+	addTestEvents(t, tmpfile)
+
+	result, err := PrepareEvents(tmpfile.Name())
+	if err != nil {
+		t.Fatalf("PrepareEvents failed: %v", err)
+	}
+
+	if len(result.Events) != 1 {
+		t.Errorf("Expected 1 event, got %d", len(result.Events))
+	}
+
+	if result.Events[0].Content != "Modified" {
+		t.Errorf("Expected 'Modified', got %q", result.Events[0].Content)
+	}
+
+	if len(result.Audit) != 2 {
+		t.Errorf("Expected 2 audit events, got %d", len(result.Audit))
+	}
+}
+
+func addTestEvents(t *testing.T, tmpfile *os.File) {
+	err := AppendEvent(tmpfile.Name(), NewNote("Original", "session", "/home", "user"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -32,7 +53,10 @@ func TestPrepareEvents(t *testing.T) {
 		Content:   "Modified",
 		RefId:     1,
 	}
-	AppendEvent(tmpfile.Name(), modEvent)
+	err = AppendEvent(tmpfile.Name(), modEvent)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	delEvent := &Event{
 		Type:      "delete",
@@ -42,23 +66,9 @@ func TestPrepareEvents(t *testing.T) {
 		User:      "user",
 		RefId:     2,
 	}
-	AppendEvent(tmpfile.Name(), delEvent)
-
-	result, err := PrepareEvents(tmpfile.Name())
+	err = AppendEvent(tmpfile.Name(), delEvent)
 	if err != nil {
-		t.Fatalf("PrepareEvents failed: %v", err)
-	}
-
-	if len(result.Events) != 1 {
-		t.Errorf("Expected 1 event, got %d", len(result.Events))
-	}
-
-	if result.Events[0].Content != "Modified" {
-		t.Errorf("Expected 'Modified', got %q", result.Events[0].Content)
-	}
-
-	if len(result.Audit) != 2 {
-		t.Errorf("Expected 2 audit events, got %d", len(result.Audit))
+		t.Fatal(err)
 	}
 }
 
