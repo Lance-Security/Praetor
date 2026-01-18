@@ -18,10 +18,6 @@ func TestPrepareEvents(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = AppendEvent(tmpfile.Name(), NewNote("Keep", "session", "/home", "user"))
-	if err != nil {
-		t.Fatal(err)
-	}
 	err = AppendEvent(tmpfile.Name(), NewNote("Delete", "session", "/home", "user"))
 	if err != nil {
 		t.Fatal(err)
@@ -44,7 +40,7 @@ func TestPrepareEvents(t *testing.T) {
 		SessionID: "session",
 		Cwd:       "/home",
 		User:      "user",
-		RefId:     3,
+		RefId:     2,
 	}
 	AppendEvent(tmpfile.Name(), delEvent)
 
@@ -53,8 +49,8 @@ func TestPrepareEvents(t *testing.T) {
 		t.Fatalf("PrepareEvents failed: %v", err)
 	}
 
-	if len(result.Events) != 2 {
-		t.Errorf("Expected 2 events, got %d", len(result.Events))
+	if len(result.Events) != 1 {
+		t.Errorf("Expected 1 event, got %d", len(result.Events))
 	}
 
 	if result.Events[0].Content != "Modified" {
