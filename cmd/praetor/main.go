@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 Lance Security <support@lancesecurity.org>
+Copyright © 2025 Lachlan Harris <contact@lachlanharris.dev>
 */
 package main
 

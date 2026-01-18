@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 Lance Security <support@lancesecurity.org>
+Copyright © 2025 Lachlan Harris <contact@lachlanharris.dev>
 */
 package cmd
 
@@ -47,7 +47,7 @@ var noteCmd = &cobra.Command{
 		if len(tags) > 0 {
 			n.Tags = append(n.Tags, tags...)
 		}
-		
+
 		if err := events.AppendEvent(engagement.EventsPath(engDir), n); err != nil {
 			return err
 		}

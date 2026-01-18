@@ -4,131 +4,130 @@ project_name: praetor
 version: 2
 
 metadata:
-  mod_timestamp: "{{ .CommitTimestamp }}"
+    mod_timestamp: "{{ .CommitTimestamp }}"
 
 before:
-  hooks:
-    - go mod tidy
+    hooks:
+        - go mod tidy
 
 builds:
-  - id: praetor
-    main: ./cmd/praetor
-    binary: pt
-    goos:
-      - linux
-    goarch:
-      - amd64
-      - arm64
+    - id: praetor
+      main: ./cmd/praetor
+      binary: pt
+      goos:
+          - linux
+      goarch:
+          - amd64
+          - arm64
 
-    env:
-      - CGO_ENABLED=0
-    ldflags:
-      - -s -w
-      - -X github.com/lachlanharrisdev/praetor/internal/version.Version={{ .Version }}
-      - -X github.com/lachlanharrisdev/praetor/internal/version.Commit={{ .Commit }}
-      - -X github.com/lachlanharrisdev/praetor/internal/version.Date={{ .CommitDate }}
+      env:
+          - CGO_ENABLED=0
+      ldflags:
+          - -s -w
+          - -X github.com/lachlanharrisdev/praetor/internal/version.Version={{ .Version }}
+          - -X github.com/lachlanharrisdev/praetor/internal/version.Commit={{ .Commit }}
+          - -X github.com/lachlanharrisdev/praetor/internal/version.Date={{ .CommitDate }}
 
 gomod:
-  proxy: true
-  env:
-    - GOPROXY=https://proxy.golang.org,direct
-    - GOSUMDB=sum.golang.org
-    - GOPRIVATE=github.com/lance-security/*
-    - GONOSUMDB=github.com/lance-security/*
+    proxy: true
+    env:
+        - GOPROXY=https://proxy.golang.org,direct
+        - GOSUMDB=sum.golang.org
+        - GOPRIVATE=github.com/lachlanharrisdev/*
+        - GONOSUMDB=github.com/lachlanharrisdev/*
 
 upx:
-  # disabled as it sometimes triggers AV; will provide both binaries if there's demand
-  - enabled: false
-    ids: [praetor]
-    goos: [linux]
-    goarch: [amd64, arm64]
-    compress: best
-    lzma: true
-    brute: true
+    # disabled as it sometimes triggers AV; will provide both binaries if there's demand
+    - enabled: false
+      ids: [praetor]
+      goos: [linux]
+      goarch: [amd64, arm64]
+      compress: best
+      lzma: true
+      brute: true
 
 archives:
-  - id: default
-    formats: ["tar.gz"]
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    format_overrides:
-      - goos: windows
-        formats: ["zip"]
+    - id: default
+      formats: ["tar.gz"]
+      name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+      format_overrides:
+          - goos: windows
+            formats: ["zip"]
 
 checksum:
-  name_template: "checksums.txt"
-  algorithm: sha256
+    name_template: "checksums.txt"
+    algorithm: sha256
 
 changelog:
-  use: github
-  abbrev: 7
-  groups:
-    - title: "Features"
-      regexp: '^feat(\(.+\))?:'
-      order: 0
-    - title: "Bug Fixes"
-      regexp: '^fix(\(.+\))?:'
-      order: 1
-    - title: "Uncategorized"
-      order: 999
-  filters:
-    exclude:
-      - '^docs(\(.+\))?:'
-      - '^test(\(.+\))?:'
-      - '^refactor(\(.+\))?:'
-      - '^chore(\(.+\))?:'
-      - '^refc(\(.+\))?:'
+    use: github
+    abbrev: 7
+    groups:
+        - title: "Features"
+          regexp: '^feat(\(.+\))?:'
+          order: 0
+        - title: "Bug Fixes"
+          regexp: '^fix(\(.+\))?:'
+          order: 1
+        - title: "Uncategorized"
+          order: 999
+    filters:
+        exclude:
+            - '^docs(\(.+\))?:'
+            - '^test(\(.+\))?:'
+            - '^refactor(\(.+\))?:'
+            - '^chore(\(.+\))?:'
+            - '^refc(\(.+\))?:'
 
 sboms:
-  - artifacts: archive
+    - artifacts: archive
 
 release:
-  github:
-    owner: lance-security
-    name: praetor
-  draft: false
-  replace_existing_draft: false
-  use_existing_draft: false
-  replace_existing_artifacts: false
+    github:
+        owner: lachlanharrisdev
+        name: praetor
+    draft: false
+    replace_existing_draft: false
+    use_existing_draft: false
+    replace_existing_artifacts: false
 
-  name_template: "{{ .Tag }}"
-  header: |
-    # Praetor {{ .Version }}
+    name_template: "{{ .Tag }}"
+    header: |
+        # Praetor {{ .Version }}
 
-    **Release Date:** {{ .Date }}
-    **Latest Included Commit:** {{ .ShortCommit }}
-    **Prerelease:** {{ .Prerelease }}
-    **Download URL:** {{ .ReleaseURL }}
+        **Release Date:** {{ .Date }}
+        **Latest Included Commit:** {{ .ShortCommit }}
+        **Prerelease:** {{ .Prerelease }}
+        **Download URL:** {{ .ReleaseURL }}
 
-    ---
-  footer: |
-    ---
+        ---
+    footer: |
+        ---
 
-    ## Installation
+        ## Installation
 
-    Download the binary for your platform from the assets below, extract, optionally verify the checksum, and place the binary in your `$PATH`.
+        Download the binary for your platform from the assets below, extract, optionally verify the checksum, and place the binary in your `$PATH`.
 
-    **Linux (x86_64/amd64)**
-    ```bash
-    tar xzf praetor_{{ .Version }}_linux_amd64.tar.gz
-    sudo mv pt /usr/local/bin/
-    ```
+        **Linux (x86_64/amd64)**
+        ```bash
+        tar xzf praetor_{{ .Version }}_linux_amd64.tar.gz
+        sudo mv pt /usr/local/bin/
+        ```
 
-    **Linux (arm64)**
-    ```bash
-    tar xzf praetor_{{ .Version }}_linux_arm64.tar.gz
-    sudo mv pt /usr/local/bin/
-    ```
+        **Linux (arm64)**
+        ```bash
+        tar xzf praetor_{{ .Version }}_linux_arm64.tar.gz
+        sudo mv pt /usr/local/bin/
+        ```
 
-    **Verify Checksum:**
-    ```bash
-    sha256sum -c checksums.txt
-    ```
+        **Verify Checksum:**
+        ```bash
+        sha256sum -c checksums.txt
+        ```
 
-    > We currently only support Linux. If you'd like to add support for another OS, or you just want to help out, we'd be absolutely happy for you contribute in any way!
+        > We currently only support Linux. If you'd like to add support for another OS, or you just want to help out, we'd be absolutely happy for you contribute in any way!
 
-    ### Resources
+        ### Resources
 
-    - [Documentation](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/wiki)
-    - [Report Issues](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/issues)
-    - [Discussions](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/discussions)
-    - [Roadmap](https://github.com/orgs/Lance-Security/projects/1)
+        - [Documentation](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/wiki)
+        - [Report Issues](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/issues)
+        - [Discussions](https://github.com/{{ .Env.GITHUB_REPOSITORY }}/discussions)
