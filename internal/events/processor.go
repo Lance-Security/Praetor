@@ -14,6 +14,17 @@ func PrepareEvents(path string) (*ProcessedEvents, error) {
 		return nil, err
 	}
 
+	deleted, eventMap := processRawEvents(rawEvents)
+	active := buildActiveEvents(eventMap, deleted)
+	audit := buildAuditTrail(rawEvents)
+
+	return &ProcessedEvents{
+		Events: active,
+		Audit:  audit,
+	}, nil
+}
+
+func processRawEvents(rawEvents []*Event) (map[int]bool, map[int]*Event) {
 	deleted := make(map[int]bool)
 	eventMap := make(map[int]*Event)
 
@@ -30,6 +41,10 @@ func PrepareEvents(path string) (*ProcessedEvents, error) {
 		}
 	}
 
+	return deleted, eventMap
+}
+
+func buildActiveEvents(eventMap map[int]*Event, deleted map[int]bool) []*Event {
 	var active []*Event
 	for id, e := range eventMap {
 		if deleted[id] {
@@ -39,9 +54,10 @@ func PrepareEvents(path string) (*ProcessedEvents, error) {
 		e.PrevHash = ""
 		active = append(active, e)
 	}
+	return active
+}
 
-	// *tamper-proofing artefacts are removed due to the fact we are actively modifying
-	// and deleting parts of the "chain"; exported data is not the source of truth
+func buildAuditTrail(rawEvents []*Event) []*Event {
 	var auditEvents []*Event
 	for _, e := range rawEvents {
 		if e.Type == "modify" || e.Type == "delete" {
@@ -50,11 +66,7 @@ func PrepareEvents(path string) (*ProcessedEvents, error) {
 			auditEvents = append(auditEvents, e)
 		}
 	}
-
-	return &ProcessedEvents{
-		Events: active,
-		Audit:  auditEvents,
-	}, nil
+	return auditEvents
 }
 
 // FilterEvents filters events based on provided tags and types.
@@ -63,37 +75,42 @@ func FilterEvents(events []*Event, tags, types []string) []*Event {
 		return events
 	}
 
-	tagSet := make(map[string]bool)
-	for _, t := range tags {
-		tagSet[t] = true
-	}
-
-	typeSet := make(map[string]bool)
-	for _, t := range types {
-		typeSet[t] = true
-	}
+	typeSet := makeSet(types)
+	tagSet := makeSet(tags)
 
 	var result []*Event
 	for _, e := range events {
-		if len(types) > 0 && !typeSet[e.Type] {
-			continue
+		if matchesFilters(e, typeSet, tagSet, len(types) > 0, len(tags) > 0) {
+			result = append(result, e)
 		}
-
-		if len(tags) > 0 {
-			hasTag := false
-			for _, t := range e.Tags {
-				if tagSet[t] {
-					hasTag = true
-					break
-				}
-			}
-			if !hasTag {
-				continue
-			}
-		}
-
-		result = append(result, e)
 	}
 
 	return result
+}
+
+func makeSet(items []string) map[string]bool {
+	set := make(map[string]bool)
+	for _, item := range items {
+		set[item] = true
+	}
+	return set
+}
+
+func matchesFilters(e *Event, typeSet, tagSet map[string]bool, hasTypeFilter, hasTagFilter bool) bool {
+	if hasTypeFilter && !typeSet[e.Type] {
+		return false
+	}
+	if hasTagFilter && !hasEventTag(e, tagSet) {
+		return false
+	}
+	return true
+}
+
+func hasEventTag(e *Event, tagSet map[string]bool) bool {
+	for _, t := range e.Tags {
+		if tagSet[t] {
+			return true
+		}
+	}
+	return false
 }
