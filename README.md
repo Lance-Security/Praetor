@@ -98,7 +98,7 @@ Praetor follows most standard conventions for contributing, and accepts any cont
 
 Praetor has full support for Github Codespaces. These are recommended for small changes or devices with no access to a Linux environment. You can use the buttons below to open the repository in a web-based editor and get started.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/lachlanharrisdev/praetor)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/lachlanharrisdev/praetor?quickstart=1)
 
 <h3>Dev Containers</h3>
 
