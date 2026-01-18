@@ -23,7 +23,7 @@
 </div>
 
 <br/>
-<h2>What is Praetor?</h2>
+<h2>Introduction</h2>
 
 Praetor is a Go-based CLI tool built solely to reduce administrative friction in penetration testing. `pt` offers a clean set of integrated utilities to:
 * Manage engagement contexts & directories
@@ -32,7 +32,7 @@ Praetor is a Go-based CLI tool built solely to reduce administrative friction in
 * And endless possibilities to customise to suit Praetor to your team's needs and reduce the cognitive load of administrative work.
 
 <br/>
-<h2 align="right">How do I get Started?</h2>
+<h2 align="right">Get Started</h2>
 
 <h3>Installation</h3>
 
@@ -84,6 +84,34 @@ $ pt run nmap -sC 123.45.67.89
 ```bash
 $ pt list 3
 ```
+
+<br/>
+
+<h2 align="right">Contributing</h2>
+
+<br/>
+
+Praetor follows most standard conventions for contributing, and accepts any contributions from documentation improvements, bug triage / fixes, small features or any updates for [issues in the backlog](https://github.com/lachlanharrisdev/praetor/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22status%3A%20backlog%22). For more information on contributing please see [CONTRIBUTING.md](https://github.com/lachlanharrisdev/praetor/blob/main/.github/CONTRIBUTING.md).
+
+<br/>
+<h3>Codespaces</h3>
+
+Praetor has full support for Github Codespaces. These are recommended for small changes or devices with no access to a Linux environment. You can use the buttons below to open the repository in a web-based editor and get started.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/lachlanharrisdev/praetor)
+
+<h3>Dev Containers</h3>
+
+As a positive side effect of supporting Codespaces, we also have full support for Dev Containers. These provide a reproducible development environment that automatically isolates the project and installs the officially supported toolchain. 
+To get started quickly, click the below button.
+
+[![Open in Dev Containers](https://img.shields.io/badge/Open%20In%20Dev%20Container-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/lachlanharrisdev/praetor)
+
+<h3>Local Development</h3>
+
+For local development, please refer to [CONTRIBUTING.md](https://github.com/lachlanharrisdev/praetor/blob/main/.github/CONTRIBUTING.md). Again, we follow most conventions so local development involves the standard flow of fork-PR-merge.
+
+<br/>
 
 ---
 
