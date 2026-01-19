@@ -53,6 +53,31 @@ func RunInBastion(args []string) error {
 	}
 	formats.Success("Project directory resolved")
 
+	bwrapArgs := configureSandbox(b, absProjectDir)
+
+	bwrapArgs = append(bwrapArgs, b.Command...)
+	cmd := execCommand("bwrap", bwrapArgs...)
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+
+	if len(b.Command) > 0 {
+		formats.Infof("Executing in bastion: %s", b.Command[0])
+	} else {
+		formats.Info("Executing in bastion")
+	}
+
+	if err := cmd.Run(); err != nil {
+		formats.Errorf("Bastion command failed: %v", err)
+		return fmt.Errorf("bastion command failed: %w", err)
+	}
+
+	formats.Success("Bastion command completed")
+	return nil
+}
+
+func configureSandbox(b Bastion, absProjectDir string) []string {
 	formats.Info("Configuring sandbox environment")
 	bwrapArgs := []string{
 		"--ro-bind", "/usr", "/usr",
@@ -84,26 +109,7 @@ func RunInBastion(args []string) error {
 
 	formats.Info("Bastion configuration complete")
 
-	bwrapArgs = append(bwrapArgs, b.Command...)
-	cmd := execCommand("bwrap", bwrapArgs...)
-
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-
-	if len(b.Command) > 0 {
-		formats.Infof("Executing in bastion: %s", b.Command[0])
-	} else {
-		formats.Info("Executing in bastion")
-	}
-
-	if err := cmd.Run(); err != nil {
-		formats.Errorf("Bastion command failed: %v", err)
-		return fmt.Errorf("bastion command failed: %w", err)
-	}
-
-	formats.Success("Bastion command completed")
-	return nil
+	return bwrapArgs
 }
 
 // CheckAndInstallBubblewrap checks if bubblewrap is installed,
