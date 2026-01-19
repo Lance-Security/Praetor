@@ -2,9 +2,32 @@
 
 As Praetor is used almost exclusively in penetration testing environments, security is our utmost priority. We believe Praetor should only add to engagements, not be the reason of compromise.
 
+<br/>
+
 ## Supported Versions
 
 Due to the nature of the tool, we only actively support the latest version. You are free to report vulnerabilities in older versions, however it's a significantly lower priority for our primary maintainers and therefore may take longer to be addressed.
+
+<br/>
+
+## Threat Model
+
+Praetor is not designed to work in an absolutely compromised environment. While it is built to handle compliance standards and potentially compromised networks or listeners, a clear threat model is in place to define exactly what security benefits Praetor provides and what is out of scope or too loosely related to Praetor's functionality.
+
+**In-scope**:
+* MITM Attacks when syncing events between servers
+* Praetor Server compromise (NOT this repository) or malicious server operator
+* Modifications of event log without explicit use of Praetor commands
+* Deletion of events within event log without explicit use of Praetor commands
+* Read-only access by a malicious user to a penetration tester's filesystem
+
+**Out-of-scope**:
+* R/W or command execution ability on a penetration tester's system
+* Stolen encryption keys
+* Pre-existing malware (e.g. keyloggers) on a penetration tester's system
+* Timing analysis
+
+<br/>
 
 ## Reporting a Vulnerability
 
