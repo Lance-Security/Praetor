@@ -1,12 +1,10 @@
 <!--<br />-->
 <div align="center">
-  <!--
   <a href="https://github.com/lachlanharrisdev/praetor">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src=".github/praetor-white-transparent.png" alt="Logo" width="80" height="80"/>
   </a>
-  -->
 
-<h1 align="center">Praetor</h1>
+  <h1 align="center">Praetor</h1>
 
   <p align="center">
     Sophisticated engagement management & low-friction notetaking for penetration testing
@@ -25,11 +23,11 @@
 <br/>
 <h2>Introduction</h2>
 
-Praetor is a Go-based CLI tool built solely to reduce administrative friction in penetration testing. `pt` offers a clean set of integrated utilities to:
-* Manage engagement contexts & directories
-* Intuitive commands to record, update, report on, format and export commands, notes & outputs
-* A lightweight, centralised & forward-immutable event log to contain context for each engagement
-* And endless possibilities to customise to suit Praetor to your team's needs and reduce the cognitive load of administrative work.
+Praetor is a CLI tool built solely to reduce administrative friction in penetration testing. `pt` offers a clean set of integrated utilities to:
+* Manage engagement contexts, directories & archiving
+* Provide intuitive commands to record, update, report on, format and export commands, notes & outputs
+* Manage a forward-immutable, centralised & lightweight event log to contain context for each engagement
+* Give endless possibilities to customise to suit Praetor to your team's needs and reduce the cognitive load of administrative work.
 
 <br/>
 <h2 align="right">Get Started</h2>
@@ -39,10 +37,10 @@ Praetor is a Go-based CLI tool built solely to reduce administrative friction in
 1. Go to the [releases](https://github.com/lachlanharrisdev/praetor/releases/) page and download the desired version & `checksums.txt` file. It should look like `praetor_{version}_{os}_{arch}.targ.gz`
 2. Run the following commands in your shell to extract and move to your `bin`
 ```sh
-tar xzf praetor_0.0.4-dev.1_<os>_<arch>.tar.gz
+tar xzf praetor_{version}_{os}_{arch}.tar.gz
 sudo mv pt /usr/local/bin/
 ```
-3. Verify the checksums
+3. (Optional) Verify the checksums before moving to `bin`
 ```sh
 sha256sum -c checksums.txt
 ```
@@ -102,14 +100,15 @@ Praetor has full support for Github Codespaces. These are recommended for small 
 
 <h3>Dev Containers</h3>
 
-As a positive side effect of supporting Codespaces, we also have full support for Dev Containers. These provide a reproducible development environment that automatically isolates the project and installs the officially supported toolchain. 
-To get started quickly, click the below button.
+We also have full support for Dev Containers. These provide a reproducible development environment that automatically isolates the project and installs the officially supported toolchain. 
+
+Clicking the below button will open up VS Code on your local machine, clone this repository and open it automatically inside a development container.
 
 [![Open in Dev Containers](https://img.shields.io/badge/Open%20In%20Dev%20Container-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/lachlanharrisdev/praetor)
 
 <h3>Local Development</h3>
 
-For local development, please refer to [CONTRIBUTING.md](https://github.com/lachlanharrisdev/praetor/blob/main/.github/CONTRIBUTING.md). Again, we follow most conventions so local development involves the standard flow of fork-PR-merge.
+For local development, please refer to [CONTRIBUTING.md](https://github.com/lachlanharrisdev/praetor/blob/main/.github/CONTRIBUTING.md). Again, we follow most conventions so local development involves the standard flow of `fork-PR-merge`.
 
 <br/>
 
