@@ -4,9 +4,9 @@ Copyright © 2025 Lachlan Harris <contact@lachlanharris.dev>
 package cmd
 
 import (
-	"github.com/lachlanharrisdev/praetor/internal/output"
 	"github.com/spf13/cobra"
 
+	"github.com/lachlanharrisdev/praetor/internal/formats"
 	"github.com/lachlanharrisdev/praetor/internal/version"
 )
 
@@ -16,7 +16,7 @@ var versionCmd = &cobra.Command{
 	Short: "Shows current version info",
 	Long:  `Version shows the current version information of the application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		output.LogSuccessf("Praetor `pt` version %s (commit: %s, date: %s)", version.Version, version.Commit, version.Date)
+		formats.Successf("Praetor `pt` version %s (commit: %s, date: %s)", version.Version, version.Commit, version.Date)
 	},
 }
 

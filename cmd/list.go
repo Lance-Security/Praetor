@@ -10,6 +10,7 @@ import (
 
 	"github.com/lachlanharrisdev/praetor/internal/engagement"
 	"github.com/lachlanharrisdev/praetor/internal/events"
+	"github.com/lachlanharrisdev/praetor/internal/formats"
 	"github.com/spf13/cobra"
 )
 
@@ -38,11 +39,22 @@ var listCmd = &cobra.Command{
 			}
 		}
 		e, err := events.GetLastNEvents(engagement.EventsPath(engDir), n)
+		if err != nil {
+			return err
+		}
 
-		string := events.ShowEventsTerminal(e)
+		msgs := make([]formats.Message, 0, len(e))
+		for _, ev := range e {
+			msgs = append(msgs, formats.Message{Level: formats.LevelInfo, Event: ev})
+		}
 
-		fmt.Print(string)
-		return err
+		out, err := formats.RenderMessages(formats.FormatTerminal, msgs, formats.Options{Format: formats.FormatTerminal})
+		if err != nil {
+			return err
+		}
+
+		fmt.Print(out)
+		return nil
 	},
 }
 

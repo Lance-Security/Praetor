@@ -13,7 +13,7 @@ import (
 
 	"github.com/lachlanharrisdev/praetor/internal/engagement"
 	"github.com/lachlanharrisdev/praetor/internal/events"
-	"github.com/lachlanharrisdev/praetor/internal/output"
+	"github.com/lachlanharrisdev/praetor/internal/formats"
 )
 
 // deleteCmd represents the delete command
@@ -49,7 +49,7 @@ func deleteEvent(args []string) error {
 		return err
 	}
 	if dEvent == nil || eventId == 0 {
-		output.LogWarningf("Event ID %d not found\n", eventId)
+		formats.Warnf("Event ID %d not found", eventId)
 		return fmt.Errorf("event ID %d not found", eventId)
 	}
 
@@ -77,7 +77,7 @@ func deleteEvent(args []string) error {
 		return err
 	}
 
-	output.LogSuccessf("Successfully appended delete event for ID %d\n", eventId)
+	formats.Successf("Successfully appended delete event for ID %d", eventId)
 	return nil
 }
 

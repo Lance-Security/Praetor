@@ -12,7 +12,7 @@ import (
 
 	"github.com/lachlanharrisdev/praetor/internal/engagement"
 	"github.com/lachlanharrisdev/praetor/internal/events"
-	"github.com/lachlanharrisdev/praetor/internal/output"
+	"github.com/lachlanharrisdev/praetor/internal/formats"
 )
 
 // noteCmd represents the note command
@@ -51,7 +51,7 @@ var noteCmd = &cobra.Command{
 		if err := events.AppendEvent(engagement.EventsPath(engDir), n); err != nil {
 			return err
 		}
-		output.LogSuccess("Successfully added note")
+		formats.Success("Successfully added note")
 		return engagement.TouchLastUsed(engDir)
 	},
 	Args:    cobra.MinimumNArgs(1),

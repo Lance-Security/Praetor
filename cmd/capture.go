@@ -14,7 +14,7 @@ import (
 
 	"github.com/lachlanharrisdev/praetor/internal/engagement"
 	"github.com/lachlanharrisdev/praetor/internal/events"
-	"github.com/lachlanharrisdev/praetor/internal/output"
+	"github.com/lachlanharrisdev/praetor/internal/formats"
 )
 
 // captureCmd represents the capture command
@@ -65,8 +65,11 @@ func capture(args []string) error {
 	}
 
 	if rawData == "" {
-		output.LogWarning("No data captured")
+
+		formats.Warn("No data captured")
+
 		return fmt.Errorf("no data to capture")
+
 	}
 
 	event := events.NewEvent(
@@ -88,8 +91,10 @@ func capture(args []string) error {
 		return fmt.Errorf("failed to append event: %w", err)
 	}
 
-	output.LogSuccess("Successfully captured and logged result")
+	formats.Success("Successfully captured and logged result")
+
 	return engagement.TouchLastUsed(engDir)
+
 }
 
 // captureFromFile
@@ -102,19 +107,24 @@ func captureFromFile(args []string) (rawData string, sourceLabel string, err err
 	return data, filepath.Base(filename), nil
 }
 
-// captureFromStdin
 func captureFromStdin() (rawData string, sourceLabel string, err error) {
-	output.LogTask("Reading data from stdin")
-	stopLoader := output.StartLoader("stdin-read", "Waiting for data...")
+
+	formats.Info("Reading data from stdin")
 
 	data, err := readFromStdin()
+
 	if err != nil {
-		stopLoader(output.LevelError, output.IconReject, fmt.Sprintf("Failed to read from stdin: %v", err))
+
+		formats.Errorf("Failed to read from stdin: %v", err)
+
 		return "", "", fmt.Errorf("failed to read from stdin: %w", err)
+
 	}
 
-	defer stopLoader(output.LevelPrimary, output.IconAccept, "Read data from stdin")
+	formats.Success("Read data from stdin")
+
 	return data, "stdin", nil
+
 }
 
 // readFromFile reads the content of a file with security limits and validation

@@ -29,19 +29,7 @@ func ShowEventTerminal(e Event) string {
 	}
 
 	typeLabel := strings.ToUpper(e.Type)
-	var typeStyled string
-	switch strings.ToLower(e.Type) {
-	case "note":
-		typeStyled = utils.Primary(typeLabel)
-	case "command":
-		typeStyled = utils.Warning(typeLabel)
-	case "result":
-		typeStyled = utils.Accept(typeLabel)
-	case "error":
-		typeStyled = utils.Error(typeLabel)
-	default:
-		typeStyled = utils.Primary(typeLabel)
-	}
+	typeStyled := StyleType(typeLabel)
 
 	var b strings.Builder
 	b.WriteString(utils.Mutedf("[%s] ", timestamp))
@@ -54,6 +42,22 @@ func ShowEventTerminal(e Event) string {
 	b.WriteString(utils.Mutedf("id %v | ", e.Id))
 	b.WriteString(e.Content) // normal content
 	return b.String()
+}
+
+// StyleType styes events based on their type
+func StyleType(typeLabel string) string {
+	switch strings.ToLower(typeLabel) {
+	case "note":
+		return utils.Primary(typeLabel)
+	case "command":
+		return utils.Warning(typeLabel)
+	case "result":
+		return utils.Accept(typeLabel)
+	case "error":
+		return utils.Error(typeLabel)
+	default:
+		return utils.Default(typeLabel)
+	}
 }
 
 // ShowEventsTerminal formats multiple events for terminal output

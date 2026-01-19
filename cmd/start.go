@@ -11,7 +11,7 @@ import (
 
 	"github.com/lachlanharrisdev/praetor/internal/config"
 	"github.com/lachlanharrisdev/praetor/internal/engagement"
-	"github.com/lachlanharrisdev/praetor/internal/output"
+	"github.com/lachlanharrisdev/praetor/internal/formats"
 )
 
 // startCmd represents the start command
@@ -33,7 +33,7 @@ var startCmd = &cobra.Command{
 		if err = os.Chdir(engDir); err != nil {
 			return fmt.Errorf("Failed to change directory to %s: %w", engDir, err)
 		}
-		output.LogSuccess(engDir)
+		formats.Success(engDir)
 		return nil
 	},
 	Aliases: []string{"engage", "init"},

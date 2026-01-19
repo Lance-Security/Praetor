@@ -8,8 +8,7 @@ import (
 	"time"
 
 	"github.com/lachlanharrisdev/praetor/internal/engagement"
-	"github.com/lachlanharrisdev/praetor/internal/events"
-	"github.com/lachlanharrisdev/praetor/internal/output"
+	"github.com/lachlanharrisdev/praetor/internal/formats"
 	"github.com/lachlanharrisdev/praetor/internal/utils"
 
 	"github.com/spf13/cobra"
@@ -33,22 +32,22 @@ var statusCmd = &cobra.Command{
 			return err
 		}
 
-		output.LogPrimary(s.Metadata.Name)
+		formats.Info(utils.Primary(s.Metadata.Name))
 
 		started := s.Metadata.CreatedAt
 		if ts, err := time.Parse(time.RFC3339Nano, s.Metadata.CreatedAt); err == nil {
 			started = ts.Local().Format("2006-01-02 15:04")
 		}
-		output.Indent()
-		defer output.Dedent()
-		output.Println(utils.Muted("Started:"), utils.Default(started))
-		output.Println(utils.Muted("Notes:"), utils.Primary(s.NoteCount))
+
+		formats.Info(utils.Muted("Started: ") + utils.Default(started))
+		formats.Info(utils.Muted("Notes: ") + utils.Primary(s.NoteCount))
 
 		if s.LastEvent == nil {
-			output.Println(utils.Muted("Latest:"), utils.Muted("(none)"))
+			formats.Info(utils.Muted("Latest: ") + utils.Muted("(none)"))
 			return nil
 		}
-		output.Println(utils.Muted("Latest:"), events.ShowEventTerminal(*s.LastEvent))
+
+		formats.EmitEvent(s.LastEvent)
 		return nil
 	},
 }

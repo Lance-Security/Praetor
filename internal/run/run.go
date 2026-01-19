@@ -8,7 +8,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/lachlanharrisdev/praetor/internal/output"
+	"github.com/lachlanharrisdev/praetor/internal/formats"
 )
 
 // RunCmd will run the provided command from the arguments
@@ -17,8 +17,8 @@ func RunCmd(args []string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("no command provided to run")
 	}
-	output.LogTask("Starting command execution")
-	stopLoader := output.StartLoader("cmd-execution", fmt.Sprintf("Executing: %s", args[0]))
+
+	formats.Infof("Executing: %s", args[0])
 
 	cmd := exec.Command(args[0], args[1:]...)
 
@@ -27,10 +27,10 @@ func RunCmd(args []string) error {
 	cmd.Stdin = os.Stdin
 
 	if err := cmd.Run(); err != nil {
-		stopLoader(output.LevelError, output.IconReject, fmt.Sprintf("Command failed: %v", err))
+		formats.Errorf("Command failed: %v", err)
 		return fmt.Errorf("command failed: %w", err)
 	}
 
-	stopLoader(output.LevelPrimary, output.IconAccept, "Command execution completed")
+	formats.Success("Command completed")
 	return nil
 }

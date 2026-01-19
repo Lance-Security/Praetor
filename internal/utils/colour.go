@@ -69,7 +69,7 @@ func primaryAttrs() []color.Attribute {
 
 func mutedAttrs() []color.Attribute {
 	if useColour {
-		return []color.Attribute{color.FgHiBlack}
+		return []color.Attribute{color.Faint}
 	}
 	return nil
 }
