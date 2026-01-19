@@ -13,31 +13,12 @@ const (
 	FormatJSON
 )
 
-type RenderOptions struct {
-	IncludeMetadata bool
-	IncludeAudit    bool
-	Tags            []string
-	Types           []string
-	MaxEvents       int
-	Metadata        map[string]string
-}
-
-func Render(format Format, processed *events.ProcessedEvents, opts RenderOptions) (string, error) {
-	eventList := processed.Events
-
-	if len(opts.Tags) > 0 || len(opts.Types) > 0 {
-		eventList = events.FilterEvents(eventList, opts.Tags, opts.Types)
-	}
-
-	if opts.MaxEvents > 0 && len(eventList) > opts.MaxEvents {
-		eventList = eventList[len(eventList)-opts.MaxEvents:]
-	}
-
+func Render(format Format, processed *events.ProcessedEvents) (string, error) {
 	switch format {
 	case FormatJSON:
-		return renderEventReportJSON(eventList, processed.Audit, opts)
+		return renderJSON(processed)
 	default:
-		return renderTerminal(eventList, processed.Audit, opts)
+		return renderTerminal(processed)
 	}
 }
 

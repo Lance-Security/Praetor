@@ -12,57 +12,31 @@ func init() {
 	RegisterMessageRenderer(FormatTerminal, renderMessagesTerminal)
 }
 
-func renderTerminal(eventList, audit []*events.Event, opts RenderOptions) (string, error) {
+func renderTerminal(processed *events.ProcessedEvents) (string, error) {
 	var b strings.Builder
 
-	for _, e := range eventList {
-		b.WriteString(renderTerminalEventLine(e))
-		b.WriteString("\n")
-	}
+	for _, e := range processed.Events {
+		ts := formatTime(e.Timestamp)
+		typeLabel := strings.ToUpper(e.Type)
 
-	if opts.IncludeAudit && len(audit) > 0 {
-		b.WriteString("\n")
-		b.WriteString(utils.Muted("Audit:\n"))
-		for _, e := range audit {
-			b.WriteString(renderTerminalAuditLine(e))
-			b.WriteString("\n")
+		b.WriteString(utils.Mutedf("%s ", ts))
+		b.WriteString(events.StyleType(typeLabel))
+		b.WriteString(utils.Muted(" "))
+		b.WriteString(e.Content)
+
+		// Show event ID for notes
+		if e.Type == "note" && e.Id > 0 {
+			b.WriteString(utils.Mutedf(" (id: %d)", e.Id))
 		}
+
+		if len(e.Tags) > 0 {
+			b.WriteString(utils.Mutedf(" [%s]", strings.Join(e.Tags, ", ")))
+		}
+
+		b.WriteString("\n")
 	}
 
 	return b.String(), nil
-}
-
-func renderTerminalEventLine(e *events.Event) string {
-	ts := formatTime(e.Timestamp)
-	typeLabel := strings.ToUpper(e.Type)
-
-	var b strings.Builder
-	b.WriteString(utils.Mutedf("%s ", ts))
-	b.WriteString(events.StyleType(typeLabel))
-	b.WriteString(utils.Muted(" "))
-	b.WriteString(e.Content)
-
-	if len(e.Tags) > 0 {
-		b.WriteString(utils.Mutedf(" [%s]", strings.Join(e.Tags, ", ")))
-	}
-
-	return b.String()
-}
-
-func renderTerminalAuditLine(e *events.Event) string {
-	ts := formatTime(e.Timestamp)
-
-	var b strings.Builder
-	b.WriteString(utils.Mutedf("%s ", ts))
-	b.WriteString(utils.Muted(strings.ToUpper(e.Type)))
-	b.WriteString(utils.Muted(": "))
-	b.WriteString(e.Content)
-
-	if e.RefId > 0 {
-		b.WriteString(utils.Mutedf(" (event_id=%d)", e.RefId))
-	}
-
-	return b.String()
 }
 
 func renderMessagesTerminal(messages []Message, opts Options) (string, error) {
