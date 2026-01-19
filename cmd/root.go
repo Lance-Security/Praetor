@@ -28,12 +28,8 @@ to isolate, secure and manage the engagement environment.`,
 		}
 		format := formats.ParseFormat(rawFormat)
 
-		// If JSON, kill colour immediately to prevent ANSI in structured output.
-		if format == formats.FormatJSON {
-			utils.ConfigureTerminal(false, false)
-		} else {
-			utils.ConfigureTerminal(true, true) // temporary until config is loaded
-		}
+		// temporary until config is loaded
+		utils.ConfigureTerminal(false, false)
 
 		formats.SetDefault(formats.NewEmitter(formats.Options{
 			Format:       format,
@@ -49,8 +45,6 @@ to isolate, secure and manage the engagement environment.`,
 
 		if format == formats.FormatTerminal {
 			utils.ConfigureTerminal(cfg.UseColour, cfg.UseBold)
-		} else {
-			utils.ConfigureTerminal(false, false)
 		}
 
 		return nil

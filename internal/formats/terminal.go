@@ -38,7 +38,7 @@ func renderTerminalEventLine(e *events.Event) string {
 
 	var b strings.Builder
 	b.WriteString(utils.Mutedf("%s ", ts))
-	b.WriteString(styleType(typeLabel))
+	b.WriteString(events.StyleType(typeLabel))
 	b.WriteString(utils.Muted(" "))
 	b.WriteString(e.Content)
 
@@ -63,21 +63,6 @@ func renderTerminalAuditLine(e *events.Event) string {
 	}
 
 	return b.String()
-}
-
-func styleType(typeLabel string) string {
-	switch strings.ToLower(typeLabel) {
-	case "note":
-		return utils.Primary(typeLabel)
-	case "command":
-		return utils.Warning(typeLabel)
-	case "result":
-		return utils.Accept(typeLabel)
-	case "error":
-		return utils.Error(typeLabel)
-	default:
-		return utils.Default(typeLabel)
-	}
 }
 
 func renderMessagesTerminal(messages []Message, opts Options) (string, error) {
@@ -119,7 +104,7 @@ func renderMessageEventLine(ev events.Event) string {
 	typeLabel := strings.ToUpper(ev.Type)
 	var b strings.Builder
 	b.WriteString(utils.Mutedf("[%s] ", timestamp))
-	b.WriteString(styleType(typeLabel))
+	b.WriteString(events.StyleType(typeLabel))
 	b.WriteString(utils.Mutedf(" by %s in %s", ev.User, events.ShortenCwd(ev.Cwd, 30)))
 	if ev.Id != 0 {
 		b.WriteString(utils.Mutedf(" id %d | ", ev.Id))
