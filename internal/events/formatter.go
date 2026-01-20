@@ -53,6 +53,8 @@ func StyleType(typeLabel string) string {
 		return utils.Warning(typeLabel)
 	case "result":
 		return utils.Accept(typeLabel)
+	case "file_snapshot":
+		return utils.Accept(typeLabel)
 	case "error":
 		return utils.Error(typeLabel)
 	default:

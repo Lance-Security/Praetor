@@ -14,7 +14,7 @@ import (
 // Event represents a single event in the engagement log
 type Event struct {
 	Id        int      `json:"id"`             // auto-incrementing ID
-	Type      string   `json:"type"`           // "note" | "command" | "result" | "modify" | "delete"
+	Type      string   `json:"type"`           // "note" | "command" | "result" | "modify" | "delete" | "file_snapshot"
 	Timestamp string   `json:"timestamp"`      // RFC3339Nano format
 	SessionID string   `json:"session_id"`     // Engagement session ID
 	Cwd       string   `json:"cwd"`            // Current working directory
