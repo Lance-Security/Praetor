@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/lachlanharrisdev/praetor/internal/utils"
+	events "github.com/lachlanharrisdev/praetor/pkg/events"
 )
 
 // ShowEventTerminal formats a single event for terminal output
@@ -22,7 +23,7 @@ import (
 // time in muted colour, type in caps bold, "by {user} in cwd" in dim, content normal
 // time formatted from RFC3339Nano to "2006-01-02 15:04"
 // TODO: get configuration for format & colours
-func ShowEventTerminal(e Event) string {
+func ShowEventTerminal(e events.Event) string {
 	timestamp := e.Timestamp
 	if ts, err := time.Parse(time.RFC3339Nano, e.Timestamp); err == nil {
 		timestamp = ts.Format("2006-01-02 15:04")
@@ -47,15 +48,15 @@ func ShowEventTerminal(e Event) string {
 // StyleType styes events based on their type
 func StyleType(typeLabel string) string {
 	switch strings.ToLower(typeLabel) {
-	case "note":
+	case events.TypeNote:
 		return utils.Primary(typeLabel)
-	case "command":
+	case events.TypeCommand:
 		return utils.Warning(typeLabel)
-	case "result":
+	case events.TypeResult:
 		return utils.Accept(typeLabel)
-	case "file_snapshot":
+	case events.TypeFileSnapshot:
 		return utils.Accept(typeLabel)
-	case "error":
+	case events.TypeError:
 		return utils.Error(typeLabel)
 	default:
 		return utils.Default(typeLabel)
@@ -63,9 +64,9 @@ func StyleType(typeLabel string) string {
 }
 
 // ShowEventsTerminal formats multiple events for terminal output
-func ShowEventsTerminal(events []*Event) string {
+func ShowEventsTerminal(eventList []*Event) string {
 	var b strings.Builder
-	for _, e := range events {
+	for _, e := range eventList {
 		b.WriteString(ShowEventTerminal(*e))
 		b.WriteString("\n")
 	}
