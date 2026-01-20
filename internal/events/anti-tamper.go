@@ -6,27 +6,13 @@ package events
 import (
 	"bufio"
 	"bytes"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
-)
 
-type hashMaterial struct {
-	Id        int      `json:"id"`
-	Type      string   `json:"type"`
-	Timestamp string   `json:"timestamp"`
-	SessionID string   `json:"session_id"`
-	Cwd       string   `json:"cwd"`
-	User      string   `json:"user"`
-	Content   string   `json:"content"`
-	Raw       string   `json:"raw"`
-	Tags      []string `json:"tags"`
-	PrevHash  string   `json:"prev_hash"`
-	RefId     int      `json:"ref_id"`
-}
+	events "github.com/lachlanharrisdev/praetor/pkg/events"
+)
 
 // GetPreviousHash returns the last event's stored hash (if present).
 // This intentionally does not validate or verify hashes; verification is handled
@@ -60,69 +46,25 @@ func EnsureEventHash(path string, event *Event) error {
 		return nil
 	}
 
-	if event.PrevHash == "" {
+	prevHash := event.PrevHash
+	if prevHash == "" {
 		prev, err := GetPreviousHash(path)
 		if err != nil {
 			return err
 		}
-		event.PrevHash = prev
-	}
-	h, err := ComputeEventHash(event)
-	if err != nil {
-		return err
-	}
-	event.Hash = h
-	return nil
-}
-
-// ComputeEventHash computes the event hash without including Hash itself.
-func ComputeEventHash(event *Event) (string, error) {
-	if event == nil {
-		return "", errors.New("nil event")
-	}
-	tags := event.Tags
-	if tags == nil {
-		tags = []string{}
+		prevHash = prev
 	}
 
-	m := hashMaterial{
-		Id:        event.Id,
-		Type:      event.Type,
-		Timestamp: event.Timestamp,
-		SessionID: event.SessionID,
-		Cwd:       event.Cwd,
-		User:      event.User,
-		Content:   event.Content,
-		Raw:       event.Raw,
-		Tags:      tags,
-		PrevHash:  event.PrevHash,
-		RefId:     event.RefId,
-	}
-	b, err := json.Marshal(&m)
-	if err != nil {
-		return "", err
-	}
-	sum := sha256.Sum256(b)
-	return hex.EncodeToString(sum[:]), nil
+	return events.SetEventHash(event, prevHash)
 }
 
 // VerifyEvent recomputes the hash and compares it with the stored value.
-func VerifyEvent(event *Event) error {
-	if event == nil {
-		return errors.New("nil event")
-	}
-	if event.Hash == "" {
-		return nil
-	}
-	expected, err := ComputeEventHash(event)
-	if err != nil {
-		return err
-	}
-	if expected != event.Hash {
-		return errors.New("events log appears modified (hash mismatch)")
-	}
-	return nil
-}
+// Re-exported from pkg/events for convenience.
+var VerifyEvent = events.VerifyEventHash
+
+// ComputeEventHash computes the event hash without including Hash itself.
+// Re-exported from pkg/events for convenience.
+var ComputeEventHash = events.ComputeEventHash
 
 // VerifyLog validates the entire hash chain in the given JSONL file.
 // It tolerates older logs that contain un-hashed events by treating the chain
