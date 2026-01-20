@@ -6,10 +6,10 @@
 
   <h1 align="center">Praetor</h1>
 
-  <p align="center">
-    Sophisticated engagement management & low-friction notetaking for penetration testing
+  <p align="center" width="100">
+    Sophisticated pentesting notetaking management that tracks exactly <b>what your team did, when they did it, and <br/>what they knew</b>, automatically & with complete immutability.
     <br />
-    <a href="https://github.com/lachlanharrisdev/praetor"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/lachlanharrisdev/praetor/blob/main/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/lachlanharrisdev/praetor/blob/main/CONTRIBUTING.md">Contribute</a>
@@ -17,17 +17,41 @@
     <a href="https://github.com/lachlanharrisdev/praetor/issues/new?template=bug_report.md">Report Bug</a>
     &middot;
     <a href="https://github.com/lachlanharrisdev/praetor/issues/new?template=feature_request.md">Request Feature</a>
+    <br/><br/>
+    <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/lachlanharrisdev/praetor/build.yml?style=for-the-badge">
+    <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/lachlanharrisdev/praetor/total?style=for-the-badge">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/lachlanharrisdev/praetor?sort=semver&display_name=tag&style=for-the-badge">
+
   </p>
 </div>
 
 <br/>
 <h2>Introduction</h2>
 
-Praetor is a CLI tool built solely to reduce administrative friction in penetration testing. `pt` offers a clean set of integrated utilities to:
-* Manage engagement contexts, directories & archiving
-* Provide intuitive commands to record, update, report on, format and export commands, notes & outputs
-* Manage a forward-immutable, centralised & lightweight event log to contain context for each engagement
-* Give endless possibilities to customise to suit Praetor to your team's needs and reduce the cognitive load of administrative work.
+Praetor is a CLI tool built to integrate with your team's existing notetaking workflows, while building an immutable chain of events that helps you reconstruct your entire engagement.
+
+<br/>
+
+<div align="center"> 
+  <blockquote><i>"Praetor records what you did, when you did it, and what you knew at the time - automatically"</i></blockquote>
+</div>
+
+<br/>
+
+Additionally, it brings plenty of utilities aimed at lowering the friction of notetaking in penetration testing, by offering a fully integrated and cohesive set of commands to run commands, capture output, take quick notes, record credentials securely, modify or delete your past notes, and view and reconstruct any part of your engagement.
+
+<br/>
+
+<h3>Contents</h3>
+
+* [Introduction](#introduction)
+* [Get started](#get-started)
+  * [Installation](#installation)
+  * [Usage](#usage)
+* [Contributing](#contributing)
+  * [Codespaces](#codespaces)
+  * [Dev Containers](#dev-containers)
+  * [Local Development](#local-development)
 
 <br/>
 <h2 align="right">Get Started</h2>
@@ -35,12 +59,12 @@ Praetor is a CLI tool built solely to reduce administrative friction in penetrat
 <h3>Installation</h3>
 
 1. Go to the [releases](https://github.com/lachlanharrisdev/praetor/releases/) page and download the desired version & `checksums.txt` file. It should look like `praetor_{version}_{os}_{arch}.targ.gz`
-2. Run the following commands in your shell to extract and move to your `bin`
+2. Run the following commands in your shell to extract and move to your `bin`:
 ```sh
 tar xzf praetor_{version}_{os}_{arch}.tar.gz
 sudo mv pt /usr/local/bin/
 ```
-3. (Optional) Verify the checksums before moving to `bin`
+3. (Optional) Before moving to `bin`, verify the checksums:
 ```sh
 sha256sum -c checksums.txt
 ```
@@ -63,9 +87,10 @@ $ pt init test-eng
 
 $ cd test-eng
 ```
-2. Take your first note
+2. Add any file to sync
 ```bash
-$ pt note Engagement begun. Provided IP: 123.45.67.89
+$ nano final_report.md
+$ pt sync add final_report.md
 ```
 3. Record a tool output
 ```bash
